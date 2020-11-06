@@ -33,64 +33,82 @@
 		<div id="main" style="padding: 2em 2em;">
 
 			<!-- Content -->
-			<form>
+			<form action="/clients/register/" method="post">
+				{% csrf_token %}
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label for="inputNamel4">Usuario</label>
+						<input type="text" name="user" class="form-control" id="inputEmail4" placeholder="Nombres">
+					</div>
+				</div>
 				<div class="form-row">
 					<div class="form-group col-md-6">
 						<label for="inputNamel4">Nombres</label>
-						<input type="text" class="form-control" id="inputEmail4" placeholder="Nombres">
+						<input type="text" name="name" class="form-control" id="inputEmail4" placeholder="Nombres">
 					</div>
 					<div class="form-group col-md-6">
 						<label for="inputPassword4">Apellidos</label>
-						<input type="text" class="form-control" id="inputPassword4" placeholder="Apellidos">
+						<input type="text" name="last_name" class="form-control" id="inputPassword4" placeholder="Apellidos">
 					</div>
 				</div>
 				<div class="form-row">
 					<div class="form-group col-md-6">
 						<label for="inputEmail4">Correo</label>
-						<input type="email" class="form-control" id="inputEmail4" placeholder="Correo">
+						<input type="email" name="email" class="form-control" id="inputEmail4" placeholder="Correo">
 					</div>
 					<div class="form-group col-md-6">
 						<label for="inputPassword4">Contraseña</label>
-						<input type="password" class="form-control" id="inputPassword4" placeholder="Contraseña">
+						<input type="password" name="password" class="form-control" id="inputPassword4" placeholder="Contraseña">
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="inputAddress">Dirección</label>
-					<input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+					<input type="text" name="address" class="form-control" id="inputAddress" placeholder="1234 Main St">
 				</div>
 				<div class="form-group">
 					<label for="inputAddress2">Referencias</label>
-					<input type="text" class="form-control" id="inputAddress2"
+					<input name="reference" type="text" class="form-control" id="inputAddress2"
 						placeholder="Apartment, studio, or floor">
 				</div>
 				<div class="form-row">
-					<div class="form-group col-md-4">
+					<div class="form-group col-md-2">
 						<label for="inputState">Género</label>
-						<select id="inputState" class="form-control">
-							<option selected>Elige</option>
-							<option>Femenino</option>
-							<option>Masculino</option>
+						<select name="gender" id="inputState" class="form-control">
+	
+							<option selected value="femenino">Femenino</option>
+							<option value="masculino">Masculino</option>
+						</select>
+					</div>
+					<div class="form-group col-md-4">
+						<label for="inputState">Cantidad de Ejercicio</label>
+						<select name="exercise" id="inputState" class="form-control">
+	
+							<option selected value="poco o nada">Poco o nada</option>
+							<option value="Ligero">Ligero</option>
+							<option value="Moderado">Moderado</option>
+							<option value="Deportista">Deportista</option>
+							<option value="Atleta">Atleta</option>
 						</select>
 					</div>
 					<div class="form-group col-md-2">
 						<label for="inputState">Fecha de nacimiento</label>
 
 
-						<input class="form-control" type="date" value="2011-08-19" id="example-date-input">
+						<input name="birth" class="form-control" type="date" value="2011-08-19" id="example-date-input">
 
 					</div>
 
 					<div class="form-group col-md-2">
-						<label for="example-number-input" class="col-2 col-form-label">Peso(kg)</label>
+						<label  for="example-number-input" class="col-2 col-form-label">Peso(kg)</label>
 						<div class="col-10">
-							<input class="form-control" type="number" step="0.01" value="42" id="example-number-input">
+							<input name="weight" class="form-control" type="number" step="0.01" value="42" id="example-number-input">
 						</div>
 					</div>
 
 					<div class="form-group col-md-2">
 						<label for="example-number-input" class="col-2 col-form-label">Altura(cm)</label>
 						<div class="col-10">
-							<input class="form-control" type="number" step="0.01" value="162.5" id="example-number-input">
+							<input name="height" class="form-control" type="number" step="0.01" value="162.5" id="example-number-input">
 						</div>
 					</div>
 
@@ -99,15 +117,16 @@
 					<div class="form-row">
 						<div class="form-group col-md-2">
 							<label for="inputState">Objetivo</label>
-							<select id="inputState" class="form-control">
-								<option selected>Mejorar salud</option>
-								<option>Ganar musculutura</option>
-								<option>Perder peso</option>
+							<select name="goal" id="inputState" class="form-control">
+								<option value="mantener" selected>Mejorar salud</option>
+								<option value="ganar">Ganar musculutura</option>
+								<option value="mantener">Mantener peso</option>
+								<option value="bajar">Perder peso</option>
 							</select>
 						</div>
 						<div class="form-group col-md-2">
 							<label for="inputZip">Condición de Salud</label>
-							<input type="text" class="form-control" id="inputZip" placeholder="ejm: hígado graso">
+							<input name="condition" type="text" class="form-control" id="inputZip" placeholder="ejm: hígado graso">
 						  </div>
 
 					</div>
@@ -115,11 +134,11 @@
 					<div class="form-row">
 						<div class="form-group col-md-8">
 							<label for="inputState">Suscripción</label>
-							<select id="inputState" class="form-control">
-								<option selected>Anual</option>
-								<option>Mensual</option>
-								<option>Semanal</option>
-								<option>Casual</option>
+							<select name="membership" id="inputState" class="form-control">
+								<option value="anual" selected>Anual</option>
+								<option value="mensual">Mensual</option>
+								<option value="semanal">Semanal</option>
+								<option value="casual">Casual</option>
 							</select>
 						</div>
 
