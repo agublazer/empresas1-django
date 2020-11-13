@@ -1,12 +1,14 @@
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from .models import Client, Membership
 from django.contrib.auth.models import User
 from datetime import date, datetime
 from django.contrib.auth import authenticate
-from django.contrib.auth import login as do_login
+from django.contrib.auth import login as do_login,  logout
+
+
 
 def calculateAge(born):
     born = datetime.strptime(born, '%Y-%m-%d')
@@ -137,6 +139,8 @@ def calculateCalories(genero, peso,altura,edad,ejercicio,objetivo):
                      TMBF=TMBF*1.9
                      return (TMBF+300)
 
+def logout_view(request):
+    logout(request)
 
 class Register(View):
 
@@ -168,7 +172,9 @@ class Register(View):
         health_condition=condition,exercise=exercise,calories=calories)
         client.save()
 
-        return render(request,'profile.html', {'calories':calories,'name':name})
+        do_login(request, user)
+
+        return redirect('/profile')
 
 
 class Login(View):
@@ -177,18 +183,17 @@ class Login(View):
         username = request.POST.get("u")
         password = request.POST.get("p")
         user = authenticate(username=username, password=password)
+        client = Client.objects.get(user=user)
 
-        print(username)
-        print(password)
-        print(user)
+        print(client)
 
         # Si existe un usuario con ese nombre y contraseña
         if user is not None:
             # Hacemos el login manualmente
             do_login(request, user)
-            return render(request,'profile.html', {'calories':user.calories,'name':user.name})
+            return redirect('/profile')
         
-        return render(request, "login.html",{})
+        return render(request, "login.html",{'message':'Datos erroneos, vuelve a intentarlo.'})
 
         
         

@@ -5,7 +5,8 @@ from django.shortcuts import render
 # from django.http import HttpResponseRedirect
 from django.views import View
 from .models import WeekMenu
-
+from django.contrib.auth.decorators import login_required
+from clients.models import Client
 import datetime
 
 
@@ -20,9 +21,17 @@ def login(request):
 def register(request):
 	return render(request, 'register.html')
 
-
+@login_required
 def profile(request):
-	return render(request, 'profile.html')
+	current_user = request.user
+	client = Client.objects.get(user=current_user)
+	return render(request, 'profile.html',{'calories':client.calories,'name':current_user.first_name,
+	'monday':client.week_menu.monday,'monday_calories':client.week_menu.monday_calories,
+	'tuesday':client.week_menu.tuesday,'tuesday_calories':client.week_menu.tuesday_calories,
+	'wednesday':client.week_menu.wednesday,'wednesday_calories':client.week_menu.wednesday_calories,
+	'thursday':client.week_menu.thursday,'thursday_calories':client.week_menu.thursday_calories,
+	'friday':client.week_menu.friday,'friday_calories':client.week_menu.friday_calories,
+	'saturday':client.week_menu.saturday,'saturday_calories':client.week_menu.saturday_calories})
 
 
 class AddMenu(View):

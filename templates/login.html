@@ -23,14 +23,15 @@
 					<header id="header">
 						<h1>Iniciar Sesión</h1>
 					</header>
-
+		{{message}}
 					<!-- Main -->
 		<div id="main" style="padding: 2em 2em;">
-    					<form action="/clients/login/" method="post">
+						<form action="/clients/login/" method="post">
+							{% csrf_token %}
     						<input type="text" name="u" placeholder="Usuario" required="required" />
       					  	<input type="password" name="p" placeholder="Cotraseña" required="required" />
-      					  	<a href="profile" class="button">Ingresar</a>
-       						<!--<button type="submit" href="perfil.html" >Ingresar</button></li>-->
+      					  <!-- 	<a href="profile" class="button">Ingresar</a> -->
+       						<button class="button" type="submit">Ingresar</button></li>
    						</form>
 				</div>
 		</div>
