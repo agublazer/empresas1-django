@@ -7,4 +7,5 @@ urlpatterns = [
     path('login', views.login, name='index'),
     path('register', views.register, name='index'),
     path('profile', views.profile, name='index'),
+    path('addmenu', views.AddMenu.as_view(), name='index'),
 ]
