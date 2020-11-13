@@ -5,6 +5,8 @@ from django.views import View
 from .models import Client, Membership
 from django.contrib.auth.models import User
 from datetime import date, datetime
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as do_login
 
 def calculateAge(born):
     born = datetime.strptime(born, '%Y-%m-%d')
@@ -167,5 +169,26 @@ class Register(View):
         client.save()
 
         return render(request,'profile.html', {'calories':calories,'name':name})
+
+
+class Login(View):
+
+    def post(self, request, *args, **kwargs):
+        username = request.POST.get("u")
+        password = request.POST.get("p")
+        user = authenticate(username=username, password=password)
+
+        print(username)
+        print(password)
+        print(user)
+
+        # Si existe un usuario con ese nombre y contraseña
+        if user is not None:
+            # Hacemos el login manualmente
+            do_login(request, user)
+            return render(request,'profile.html', {'calories':user.calories,'name':user.name})
+        
+        return render(request, "login.html",{})
+
         
         
