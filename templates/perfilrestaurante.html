@@ -1,3 +1,4 @@
+{%load static%}
 <!DOCTYPE HTML>
 <!--
 	Stellar by HTML5 UP
@@ -9,8 +10,8 @@
 		<title>Pear to Pear</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+		<noscript><link rel="stylesheet" href="{% static 'assets/css/noscript.css' %}" /></noscript>
 	</head>
 	<body class="is-preload">
 
@@ -19,7 +20,7 @@
 
 				<!-- Header -->
 					<header id="header" class="alt">
-						<span class="logo"><img src="images/peramorada.svg" width="200" height="200" alt="" /></span>
+						<span class="logo"><img src="{% static 'images/peramorada.svg' %}" width="200" height="200" alt="" /></span>
 						<h1>Pear to Pear</h1>
 						<h2>Resturante</h2>
 						<p>Colaborador de una alimentacion rica y saludable</p>
@@ -49,7 +50,7 @@
 										<p>Ofrecer alimentos saludables y de calidad que satisfagan a los consumidores.Incentivar el hábito de consumo de pescado.Generar valor a todas las partes interesadas.Mantener un clima de trabajo que permita llegar a las metas y estimule el desarrollo de las personas.</p>
 										
 									</div>
-									<span class="image"><img src="images/fotointro.jpg"  width="350" height="250" alt="" /></span>
+									<span class="image"><img src="{% static 'images/bv.jpg' %}"  width="350" height="250" alt="" /></span>
 								</div>
 							</section>
 

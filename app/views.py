@@ -21,6 +21,9 @@ def login(request):
 def register(request):
 	return render(request, 'register.html')
 
+def profile_restaurant(request):
+	return render(request, 'perfilrestaurante.html')
+
 @login_required
 def profile(request):
 	current_user = request.user
