@@ -32,6 +32,10 @@
 							<li><a href="#first">Restaurantes</a></li>
 							<li><a href="#second">Reseñas</a></li>
 							<li><a href="#cta">Haz tu pedido</a></li>
+							{% if user.is_authenticated %}
+
+							<li><a href={% url 'profile' %}>Tu perfil</a></li>
+							{% endif %}
 						</ul>
 					</nav>
 

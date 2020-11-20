@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 # from django.http import HttpResponse
@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from clients.models import Client
 import datetime
 
+global restaurant_name
 
 def index(request):
 	return render(request, 'index.html')
@@ -25,18 +26,56 @@ def register(request):
 def profile_restaurant(request):
 	return render(request, 'perfilrestaurante.html')
 
+def assignMenu(request):
+	current_user = request.user
+	client = Client.objects.get(user=current_user)
+	restaurant_name = request.session['restaurant_name']
+	max_cal_menu = client.calories * 4/10
+	min_cal_menu = client.calories * 35/100
+	week_menu = WeekMenu.objects.filter(restaurant=restaurant_name,monday_calories__gte=min_cal_menu,monday_calories__lte=max_cal_menu).first()
+	client.week_menu = week_menu
+	client.save()
+	return redirect('/profile')
 
 @login_required
 def profile(request):
-	current_user = request.user
-	client = Client.objects.get(user=current_user)
-	return render(request, 'profile.html', {'calories': client.calories, 'name': current_user.first_name,
-	'monday': client.week_menu.monday, 'monday_calories': client.week_menu.monday_calories,
-	'tuesday': client.week_menu.tuesday, 'tuesday_calories': client.week_menu.tuesday_calories,
-	'wednesday': client.week_menu.wednesday, 'wednesday_calories': client.week_menu.wednesday_calories,
-	'thursday': client.week_menu.thursday, 'thursday_calories': client.week_menu.thursday_calories,
-	'friday': client.week_menu.friday, 'friday_calories': client.week_menu.friday_calories,
-	'saturday': client.week_menu.saturday, 'saturday_calories': client.week_menu.saturday_calories})
+	if request.method == 'GET':
+		current_user = request.user
+		client = Client.objects.get(user=current_user)
+		week_menu = client.week_menu
+		all_restaurants = Restaurant.objects.all()
+		if week_menu:
+			return render(request, 'profile.html', {'calories': client.calories, 'name': current_user.first_name, 'restaurants': all_restaurants, 'week_menu':week_menu,
+			'monday': week_menu.monday, 'monday_calories': week_menu.monday_calories,
+			'tuesday': week_menu.tuesday, 'tuesday_calories': week_menu.tuesday_calories,
+			'wednesday': week_menu.wednesday, 'wednesday_calories': week_menu.wednesday_calories,
+			'thursday': week_menu.thursday, 'thursday_calories': week_menu.thursday_calories,
+			'friday': week_menu.friday, 'friday_calories': week_menu.friday_calories,
+			'saturday': week_menu.saturday, 'saturday_calories': week_menu.saturday_calories})
+		else:
+			return render(request, 'profile.html', {'calories': client.calories, 'name': current_user.first_name, 'restaurants': all_restaurants, 'week_menu':week_menu})
+
+
+	elif request.method == 'POST':
+		all_restaurants = Restaurant.objects.all()
+		current_user = request.user
+		client = Client.objects.get(user=current_user)
+		restaurant_name = request.POST.get("restaurant")
+		request.session['restaurant_name'] = restaurant_name
+		max_cal_menu = client.calories * 4/10
+		min_cal_menu = client.calories * 35/100
+		week_menu = WeekMenu.objects.filter(restaurant=restaurant_name,monday_calories__gte=min_cal_menu,monday_calories__lte=max_cal_menu).first()
+		print(week_menu)
+		if week_menu:
+			return render(request, 'profile.html', {'calories': client.calories, 'name': current_user.first_name, 'restaurants': all_restaurants, 'form_week_menu':week_menu, 'restaurant_name':restaurant_name,
+			'monday': week_menu.monday, 'monday_calories': week_menu.monday_calories,
+			'tuesday': week_menu.tuesday, 'tuesday_calories': week_menu.tuesday_calories,
+			'wednesday': week_menu.wednesday, 'wednesday_calories': week_menu.wednesday_calories,
+			'thursday': week_menu.thursday, 'thursday_calories': week_menu.thursday_calories,
+			'friday': week_menu.friday, 'friday_calories': week_menu.friday_calories,
+			'saturday': week_menu.saturday, 'saturday_calories': week_menu.saturday_calories})
+		else:
+			return render(request, 'profile.html', {'calories': client.calories, 'name': current_user.first_name, 'restaurants': all_restaurants})
 
 
 class AddMenu(View):

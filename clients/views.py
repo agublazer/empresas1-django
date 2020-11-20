@@ -16,75 +16,72 @@ def calculateAge(born):
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
 
 def calculateCalories(genero, peso,altura,edad,ejercicio,objetivo):
-
-        print(genero, peso,altura,edad,ejercicio,objetivo)
-        if genero == "masculino":
-            TMBM = 66+(13.7*peso)+(5*altura)-(6.8*edad)
-            if objetivo=="bajar":
-               # return (TMBM)
-                if ejercicio == "poco o nada":
-                    TMBM=TMBM*1.2
-                    return (TMBM-500)
-
-                elif ejercicio == "Ligero":
-                     TMBM=TMBM*1.375
-                     return (TMBM-500)
-
-                elif ejercicio=="Moderado":
-                     TMBM=TMBM*1.55
-                     return (TMBM-500)
-
-                elif ejercicio=="Deportista":
-                     TMBM=TMBM*1.72
-                     return (TMBM-500)
-
-                elif ejercicio=="Atleta":
-                     TMBM=TMBM*1.9
-                     return (TMBM-500)
-
-
-            elif objetivo=="mantener":
-                 if ejercicio == "poco o nada":
-                    TMBM=TMBM*1.2
-                    return (TMBM)
-
-                 elif ejercicio == "Ligero":
-                     TMBM=TMBM*1.375
-                     return (TMBM)
-
-                 elif ejercicio=="Moderado":
-                     TMBM=TMBM*1.55
-                     return (TMBM)
-
-                 elif ejercicio=="Deportista":
-                     TMBM=TMBM*1.72
-                     return (TMBM)
-
-                 elif ejercicio=="Atleta":
-                     TMBM=TMBM*1.9
-                     return (TMBM)
-
-
-            elif objetivo=="subir":
-                 if ejercicio == "poco o nada":
-                    TMBM=TMBM*1.2
-                    return (TMBM+500)
-
-                 elif ejercicio == "Ligero":
-                     TMBM=TMBM*1.375
-                     return (TMBM+500)
-
-                 elif ejercicio=="Moderado":
-                     TMBM=TMBM*1.55
-                     return (TMBM+500)
-
-                 elif ejercicio=="Deportista":
-                     TMBM=TMBM*1.72
-                     return (TMBM+500)
-
-                 elif ejercicio=="Atleta":
-                     TMBM=TMBM*1.9
-                     return (TMBM+500)
+    
+    print(genero, peso,altura,edad,ejercicio,objetivo)
+    if genero == "masculino":
+        TMBM = 66+(13.7*peso)+(5*altura)-(6.8*edad)
+        if objetivo=="bajar":
+            if ejercicio == "poco o nada":
+                TMBM=TMBM*1.2
+                return (TMBM-500)
+                
+            elif ejercicio == "Ligero":
+                TMBM=TMBM*1.375
+                return (TMBM-500)
+                
+            elif ejercicio=="Moderado":
+                TMBM=TMBM*1.55
+                return (TMBM-500)
+                
+            elif ejercicio=="Deportista":
+                TMBM=TMBM*1.72
+                return (TMBM-500)
+                
+            elif ejercicio=="Atleta":
+                TMBM=TMBM*1.9
+                return (TMBM-500)
+                
+        elif objetivo=="mantener":
+            if ejercicio == "poco o nada":
+                TMBM=TMBM*1.2
+                return (TMBM)
+                
+            elif ejercicio == "Ligero":
+                TMBM=TMBM*1.375
+                return (TMBM)
+                
+            elif ejercicio=="Moderado":
+                TMBM=TMBM*1.55
+                return (TMBM)
+                
+            elif ejercicio=="Deportista":
+                TMBM=TMBM*1.72
+                return (TMBM)
+                
+            elif ejercicio=="Atleta":
+                TMBM=TMBM*1.9
+                return (TMBM)
+                
+        elif objetivo=="ganar":
+            if ejercicio == "poco o nada":
+                TMBM=TMBM*1.2
+                return (TMBM+500)
+                
+            elif ejercicio == "Ligero":
+                TMBM=TMBM*1.375
+                return (TMBM+500)
+                
+            elif ejercicio=="Moderado":
+                TMBM=TMBM*1.55
+                return (TMBM+500)
+            
+            elif ejercicio=="Deportista":
+                TMBM=TMBM*1.72
+                return (TMBM+500)
+                
+            elif ejercicio=="Atleta":
+                TMBM=TMBM*1.9
+                return (TMBM+500)
 
         elif genero=="femenino":
              TMBF= 655+(9.6*peso)+(1.8*altura)-(4.7*edad)
@@ -122,7 +119,7 @@ def calculateCalories(genero, peso,altura,edad,ejercicio,objetivo):
                      TMBF=TMBF*1.9
                      return (TMBF)
 
-             elif objetivo=="subir":
+             elif objetivo=="ganar":
                  if ejercicio=="poco o nada":
                     TMBF=TMBF*1.2
                     return (TMBF+300)
@@ -139,8 +136,11 @@ def calculateCalories(genero, peso,altura,edad,ejercicio,objetivo):
                      TMBF=TMBF*1.9
                      return (TMBF+300)
 
+        print("no se pudo calcular")
+
 def logout_view(request):
     logout(request)
+    return redirect('/')
 
 class Register(View):
 
