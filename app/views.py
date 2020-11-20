@@ -4,7 +4,7 @@ from django.shortcuts import render
 # from django.http import HttpResponse
 # from django.http import HttpResponseRedirect
 from django.views import View
-from .models import WeekMenu
+from .models import WeekMenu, Restaurant
 from django.contrib.auth.decorators import login_required
 from clients.models import Client
 import datetime
@@ -21,26 +21,30 @@ def login(request):
 def register(request):
 	return render(request, 'register.html')
 
+
 def profile_restaurant(request):
 	return render(request, 'perfilrestaurante.html')
+
 
 @login_required
 def profile(request):
 	current_user = request.user
 	client = Client.objects.get(user=current_user)
-	return render(request, 'profile.html',{'calories':client.calories,'name':current_user.first_name,
-	'monday':client.week_menu.monday,'monday_calories':client.week_menu.monday_calories,
-	'tuesday':client.week_menu.tuesday,'tuesday_calories':client.week_menu.tuesday_calories,
-	'wednesday':client.week_menu.wednesday,'wednesday_calories':client.week_menu.wednesday_calories,
-	'thursday':client.week_menu.thursday,'thursday_calories':client.week_menu.thursday_calories,
-	'friday':client.week_menu.friday,'friday_calories':client.week_menu.friday_calories,
-	'saturday':client.week_menu.saturday,'saturday_calories':client.week_menu.saturday_calories})
+	return render(request, 'profile.html', {'calories': client.calories, 'name': current_user.first_name,
+	'monday': client.week_menu.monday, 'monday_calories': client.week_menu.monday_calories,
+	'tuesday': client.week_menu.tuesday, 'tuesday_calories': client.week_menu.tuesday_calories,
+	'wednesday': client.week_menu.wednesday, 'wednesday_calories': client.week_menu.wednesday_calories,
+	'thursday': client.week_menu.thursday, 'thursday_calories': client.week_menu.thursday_calories,
+	'friday': client.week_menu.friday, 'friday_calories': client.week_menu.friday_calories,
+	'saturday': client.week_menu.saturday, 'saturday_calories': client.week_menu.saturday_calories})
 
 
 class AddMenu(View):
 	def get(self, request, *args, **kwargs):
 		all_menus = WeekMenu.objects.all()
-		return render(request, 'restaurant-menu.html', {'success': None, 'all_menus': all_menus})
+		all_restaurants = Restaurant.objects.all()
+		return render(request, 'restaurant-menu.html', {'success': None, 
+			'all_menus': all_menus, 'restaurants': all_restaurants})
 
 	def post(self, request, *args, **kwargs):
 		restaurant_name = request.POST.get("restaurant")
@@ -83,5 +87,33 @@ class AddMenu(View):
 		menu.save()
 
 		all_menus = WeekMenu.objects.all()
+		all_restaurants = Restaurant.objects.all()
 
-		return render(request, 'restaurant-menu.html', {'success': True, 'all_menus': all_menus})
+		return render(request, 'restaurant-menu.html', 
+			{'success': True, 'all_menus': all_menus, 'restaurants': all_restaurants})
+
+
+class AddRestaurant(View):
+	def get(self, request, *args, **kwargs):
+		all_restaurants = Restaurant.objects.all()
+		return render(request, 'add-restaurant.html', {'success': None, 'all_restaurants': all_restaurants})
+
+	def post(self, request, *args, **kwargs):
+		restaurant_name = request.POST.get("restaurant")
+		restaurant_address = request.POST.get("restaurant_address")
+		restaurant_phone = request.POST.get("restaurant_phone")
+		restaurant_cellphone = request.POST.get("restaurant_cellphone")
+		restaurant_fb = request.POST.get("restaurant_fb")
+
+		restaurant = Restaurant(
+			name=restaurant_name,
+			address=restaurant_address,
+			phone=restaurant_phone,
+			cellphone=restaurant_cellphone,
+			fb_link=restaurant_fb
+		)
+		restaurant.save()
+
+		all_restaurants = Restaurant.objects.all()
+
+		return render(request, 'add-restaurant.html', {'success': True, 'all_restaurants': all_restaurants})

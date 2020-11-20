@@ -38,7 +38,11 @@
 				<div class="form-row">
 					<div class="form-group col-md-6">
 						<label for="inputNamel4">Restaurante</label>
-						<input type="text" name="restaurant" class="form-control" id="inputEmail4" placeholder="Restaurante">
+						<select name="restaurant" class="form-control" id="inputEmail4" placeholder="Restaurante">
+						{%for restaurant in restaurants%}
+						<option value="{{restaurant.name}}">{{restaurant.name}}</option>
+						{%endfor%}
+						</select>	
 					</div>
 					<div class="form-group col-md-6">
 						<label for="inputNamel4">Nombre menú</label>
