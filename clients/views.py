@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from datetime import date, datetime
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as do_login,  logout
+from app.models import Restaurant
 
 
 
@@ -183,15 +184,25 @@ class Login(View):
         username = request.POST.get("u")
         password = request.POST.get("p")
         user = authenticate(username=username, password=password)
-        client = Client.objects.get(user=user)
-
-        print(client)
-
+        
+       
         # Si existe un usuario con ese nombre y contraseña
         if user is not None:
-            # Hacemos el login manualmente
-            do_login(request, user)
-            return redirect('/profile')
+            try:
+                client = Client.objects.get(user=user)
+                do_login(request, user)
+                return redirect('/profile')
+
+            except:
+                print("is not a client")
+
+            try:
+                restaurant = Restaurant.objects.get(user=user)
+                do_login(request, user)
+                return redirect('/restaurant_profile')
+
+            except:
+                print("is not a restaurant")
         
         return render(request, "login.html",{'message':'Datos erroneos, vuelve a intentarlo.'})
 

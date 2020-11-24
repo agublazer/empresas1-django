@@ -8,8 +8,16 @@ from .models import WeekMenu, Restaurant
 from django.contrib.auth.decorators import login_required
 from clients.models import Client
 import datetime
+from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.decorators import method_decorator
 
-global restaurant_name
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+
+content_type = ContentType.objects.get_for_model(Restaurant)
+permission = Permission.objects.get(content_type=content_type, codename='verified_restaurant')
+
+
 
 def index(request):
 	return render(request, 'index.html')
@@ -23,8 +31,19 @@ def register(request):
 	return render(request, 'register.html')
 
 
+@login_required
 def profile_restaurant(request):
 	return render(request, 'perfilrestaurante.html')
+
+@login_required
+def pedidos(request):
+	current_user = request.user
+	restaurant = Restaurant.objects.get(user=current_user)
+	restaurant_name = restaurant.name
+	all_menus = WeekMenu.objects.filter(restaurant=restaurant.name)
+	
+	return render(request, 'pedidos.html',{'all_menus':all_menus})
+
 
 def assignMenu(request):
 	current_user = request.user
@@ -78,17 +97,22 @@ def profile(request):
 			return render(request, 'profile.html', {'calories': client.calories, 'name': current_user.first_name, 'restaurants': all_restaurants})
 
 
+
+
 class AddMenu(View):
 	def get(self, request, *args, **kwargs):
-		all_menus = WeekMenu.objects.all()
-		all_restaurants = Restaurant.objects.all()
+		current_user = request.user
+		restaurant = Restaurant.objects.get(user=current_user)
+		all_menus = WeekMenu.objects.filter(restaurant=restaurant.name)
+
 		return render(request, 'restaurant-menu.html', {'success': None, 
-			'all_menus': all_menus, 'restaurants': all_restaurants})
+			'all_menus': all_menus})
 
 	def post(self, request, *args, **kwargs):
-		restaurant_name = request.POST.get("restaurant")
+		current_user = request.user
+		restaurant = Restaurant.objects.get(user=current_user)
+		restaurant_name = restaurant.name
 		menu_name = request.POST.get("name")
-
 		monday = request.POST.get("monday")
 		monday_calories = request.POST.get("monday_calories")
 		tuesday = request.POST.get("tuesday")
@@ -125,13 +149,13 @@ class AddMenu(View):
 		)
 		menu.save()
 
-		all_menus = WeekMenu.objects.all()
-		all_restaurants = Restaurant.objects.all()
+		all_menus = WeekMenu.objects.filter(restaurant=restaurant.name)
 
 		return render(request, 'restaurant-menu.html', 
-			{'success': True, 'all_menus': all_menus, 'restaurants': all_restaurants})
+			{'success': True, 'all_menus': all_menus})
 
 
+@method_decorator(staff_member_required, name='dispatch')
 class AddRestaurant(View):
 	def get(self, request, *args, **kwargs):
 		all_restaurants = Restaurant.objects.all()
@@ -139,12 +163,19 @@ class AddRestaurant(View):
 
 	def post(self, request, *args, **kwargs):
 		restaurant_name = request.POST.get("restaurant")
+		user = request.POST.get("user")
+		password = request.POST.get("password")
 		restaurant_address = request.POST.get("restaurant_address")
 		restaurant_phone = request.POST.get("restaurant_phone")
 		restaurant_cellphone = request.POST.get("restaurant_cellphone")
 		restaurant_fb = request.POST.get("restaurant_fb")
 
+		user = User.objects.create_user(username=user, email=email, 
+        password=password, first_name=name, last_name= last_name)
+		user.save()
+
 		restaurant = Restaurant(
+			user=user,
 			name=restaurant_name,
 			address=restaurant_address,
 			phone=restaurant_phone,
@@ -152,6 +183,8 @@ class AddRestaurant(View):
 			fb_link=restaurant_fb
 		)
 		restaurant.save()
+
+		restaurant.user.user_permissions.add(permission)
 
 		all_restaurants = Restaurant.objects.all()
 

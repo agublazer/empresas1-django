@@ -46,6 +46,17 @@
 			<!-- Content -->
 			<form action="addrestaurant" method="post">
 				{% csrf_token %}
+
+				<div class="form-row">
+					<div class="form-group col-md-6">
+						<label for="inputEmail4">Usuario</label>
+						<input type="text" name="user" class="form-control" id="inputEmail4" placeholder="Correo">
+					</div>
+					<div class="form-group col-md-6">
+						<label for="inputPassword4">Contraseña</label>
+						<input type="password" name="password" class="form-control" id="inputPassword4" placeholder="Contraseña">
+					</div>
+				</div>
 				<div class="form-row">
 					<div class="form-group col-md-6">
 						<label for="inputNamel4">Nombre Restaurante</label>

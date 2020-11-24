@@ -1,5 +1,6 @@
 from django.db import models
 import datetime
+from django.contrib.auth.models import User
 
 
 class WeekMenu(models.Model):
@@ -25,9 +26,15 @@ class WeekMenu(models.Model):
 
 
 class Restaurant(models.Model):
+	user = models.OneToOneField(User,on_delete=models.SET_NULL,null=True)
 	name = models.CharField(max_length=50)
 	address = models.CharField(max_length=50)
 	phone = models.CharField(max_length=50)
 	cellphone = models.CharField(max_length=50)
 	fb_link = models.CharField(max_length=50)
-	reviews = models.CharField(max_length=50)
+
+	class Meta:
+		permissions = (
+            ("verified_restaurant", "Verified restaurant account"),
+        )
+	

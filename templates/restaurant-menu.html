@@ -37,14 +37,6 @@
 				{% csrf_token %}
 				<div class="form-row">
 					<div class="form-group col-md-6">
-						<label for="inputNamel4">Restaurante</label>
-						<select name="restaurant" class="form-control" id="inputEmail4" placeholder="Restaurante">
-						{%for restaurant in restaurants%}
-						<option value="{{restaurant.name}}">{{restaurant.name}}</option>
-						{%endfor%}
-						</select>	
-					</div>
-					<div class="form-group col-md-6">
 						<label for="inputNamel4">Nombre menú</label>
 						<input type="text" name="name" class="form-control" id="inputEmail4" placeholder="Nombre menú">
 					</div>
