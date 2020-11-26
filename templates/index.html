@@ -33,8 +33,11 @@
 							<li><a href="#second">Reseñas</a></li>
 							<li><a href="#cta">Haz tu pedido</a></li>
 							{% if user.is_authenticated %}
-
+							{% if user.is_superuser%}
+							<li><a href={% url 'addrestaurant' %}>Agregar Restaurante</a></li>
+							{% else%}
 							<li><a href={% url 'profile' %}>Tu perfil</a></li>
+							{%endif%}
 							<li><a href={% url 'logout' %}>Cerrar Sesión</a></li>
 							{% endif %}
 						</ul>
