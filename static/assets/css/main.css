@@ -2714,7 +2714,7 @@ input, select, textarea {
 
 	.table-wrapper {
 		-webkit-overflow-scrolling: touch;
-		overflow-x: auto;
+		overflow-x: clip;
 	}
 
 	table {
@@ -2726,6 +2726,7 @@ input, select, textarea {
 			border: solid 1px;
 			border-left: 0;
 			border-right: 0;
+			font-size: 0.9em;
 		}
 
 		table td {

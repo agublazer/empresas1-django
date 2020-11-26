@@ -13,10 +13,10 @@ from django.utils.decorators import method_decorator
 
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User
 
 content_type = ContentType.objects.get_for_model(Restaurant)
 permission = Permission.objects.get(content_type=content_type, codename='verified_restaurant')
-
 
 
 def index(request):
@@ -35,26 +35,30 @@ def register(request):
 def profile_restaurant(request):
 	return render(request, 'perfilrestaurante.html')
 
+
 @login_required
 def pedidos(request):
 	current_user = request.user
 	restaurant = Restaurant.objects.get(user=current_user)
-	restaurant_name = restaurant.name
 	all_menus = WeekMenu.objects.filter(restaurant=restaurant.name)
-	
-	return render(request, 'pedidos.html',{'all_menus':all_menus})
+	clients = Client.objects.filter(week_menu__in=all_menus)
+	clients2 = Client.objects.all()
+	clients2 = [client for client in clients2 if client.week_menu is not None]
+
+	return render(request, 'pedidos.html', {'all_menus': all_menus, 'clientes': clients})
 
 
 def assignMenu(request):
 	current_user = request.user
 	client = Client.objects.get(user=current_user)
 	restaurant_name = request.session['restaurant_name']
-	max_cal_menu = client.calories * 4/10
-	min_cal_menu = client.calories * 35/100
-	week_menu = WeekMenu.objects.filter(restaurant=restaurant_name,monday_calories__gte=min_cal_menu,monday_calories__lte=max_cal_menu).first()
+	max_cal_menu = 5000  # client.calories * 4 / 10
+	min_cal_menu = 0  # client.calories * 35 / 100
+	week_menu = WeekMenu.objects.filter(restaurant=restaurant_name, monday_calories__gte=min_cal_menu, monday_calories__lte=max_cal_menu).first()
 	client.week_menu = week_menu
 	client.save()
 	return redirect('/profile')
+
 
 @login_required
 def profile(request):
@@ -64,7 +68,7 @@ def profile(request):
 		week_menu = client.week_menu
 		all_restaurants = Restaurant.objects.all()
 		if week_menu:
-			return render(request, 'profile.html', {'calories': client.calories, 'name': current_user.first_name, 'restaurants': all_restaurants, 'week_menu':week_menu,
+			return render(request, 'profile.html', {'calories': client.calories, 'name': current_user.first_name, 'restaurants': all_restaurants, 'week_menu': week_menu,
 			'monday': week_menu.monday, 'monday_calories': week_menu.monday_calories,
 			'tuesday': week_menu.tuesday, 'tuesday_calories': week_menu.tuesday_calories,
 			'wednesday': week_menu.wednesday, 'wednesday_calories': week_menu.wednesday_calories,
@@ -72,8 +76,7 @@ def profile(request):
 			'friday': week_menu.friday, 'friday_calories': week_menu.friday_calories,
 			'saturday': week_menu.saturday, 'saturday_calories': week_menu.saturday_calories})
 		else:
-			return render(request, 'profile.html', {'calories': client.calories, 'name': current_user.first_name, 'restaurants': all_restaurants, 'week_menu':week_menu})
-
+			return render(request, 'profile.html', {'calories': client.calories, 'name': current_user.first_name, 'restaurants': all_restaurants, 'week_menu': week_menu})
 
 	elif request.method == 'POST':
 		all_restaurants = Restaurant.objects.all()
@@ -81,12 +84,11 @@ def profile(request):
 		client = Client.objects.get(user=current_user)
 		restaurant_name = request.POST.get("restaurant")
 		request.session['restaurant_name'] = restaurant_name
-		max_cal_menu = client.calories * 4/10
-		min_cal_menu = client.calories * 35/100
-		week_menu = WeekMenu.objects.filter(restaurant=restaurant_name,monday_calories__gte=min_cal_menu,monday_calories__lte=max_cal_menu).first()
-		print(week_menu)
+		max_cal_menu = 5000  #client.calories * 4 / 10
+		min_cal_menu = 0   #client.calories * 35 / 100
+		week_menu = WeekMenu.objects.filter(restaurant=restaurant_name, monday_calories__gte=min_cal_menu, monday_calories__lte=max_cal_menu).first()
 		if week_menu:
-			return render(request, 'profile.html', {'calories': client.calories, 'name': current_user.first_name, 'restaurants': all_restaurants, 'form_week_menu':week_menu, 'restaurant_name':restaurant_name,
+			return render(request, 'profile.html', {'calories': client.calories, 'name': current_user.first_name, 'restaurants': all_restaurants, 'form_week_menu': week_menu, 'restaurant_name': restaurant_name,
 			'monday': week_menu.monday, 'monday_calories': week_menu.monday_calories,
 			'tuesday': week_menu.tuesday, 'tuesday_calories': week_menu.tuesday_calories,
 			'wednesday': week_menu.wednesday, 'wednesday_calories': week_menu.wednesday_calories,
@@ -97,16 +99,13 @@ def profile(request):
 			return render(request, 'profile.html', {'calories': client.calories, 'name': current_user.first_name, 'restaurants': all_restaurants})
 
 
-
-
 class AddMenu(View):
 	def get(self, request, *args, **kwargs):
 		current_user = request.user
 		restaurant = Restaurant.objects.get(user=current_user)
 		all_menus = WeekMenu.objects.filter(restaurant=restaurant.name)
 
-		return render(request, 'restaurant-menu.html', {'success': None, 
-			'all_menus': all_menus})
+		return render(request, 'restaurant-menu.html', {'success': None, 'all_menus': all_menus})
 
 	def post(self, request, *args, **kwargs):
 		current_user = request.user
@@ -151,8 +150,7 @@ class AddMenu(View):
 
 		all_menus = WeekMenu.objects.filter(restaurant=restaurant.name)
 
-		return render(request, 'restaurant-menu.html', 
-			{'success': True, 'all_menus': all_menus})
+		return render(request, 'restaurant-menu.html', {'success': True, 'all_menus': all_menus})
 
 
 @method_decorator(staff_member_required, name='dispatch')
@@ -170,8 +168,8 @@ class AddRestaurant(View):
 		restaurant_cellphone = request.POST.get("restaurant_cellphone")
 		restaurant_fb = request.POST.get("restaurant_fb")
 
-		user = User.objects.create_user(username=user, email=email, 
-        password=password, first_name=name, last_name= last_name)
+		# user = User.objects.create_user(username=user, email=email, password=password, first_name=name, last_name=last_name)
+		user = User.objects.create_user(username=user, password=password)
 		user.save()
 
 		restaurant = Restaurant(
