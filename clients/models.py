@@ -15,8 +15,8 @@ class Client(models.Model):
     height = models.FloatField()
     calories = models.IntegerField()
     goal = models.CharField(max_length=30)
-    health_condition = models.CharField(max_length=30)
-    week_menu = models.ForeignKey(WeekMenu, on_delete=models.SET_NULL,null=True)
+    health_condition = models.CharField(max_length=30,null=True,blank=True)
+    week_menu = models.ForeignKey(WeekMenu, on_delete=models.SET_NULL,null=True,blank=True)
 
     def __str__(self):
         return self.user.first_name
