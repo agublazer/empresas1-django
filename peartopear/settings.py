@@ -25,7 +25,7 @@ SECRET_KEY = 'i6dv(0yw^3&j^id&p94!c4sb*4!h1mwli^8yhbg997kdzskha1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 LOGIN_URL = '/login'
 # Application definition
