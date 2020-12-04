@@ -30,6 +30,10 @@ ALLOWED_HOSTS = ['*']
 LOGIN_URL = '/login'
 # Application definition
 
+GOOGLE_ANALYTICS = {
+    'google_analytics_id': 'G-D0Q5GX3GK4',
+}
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'clients',
-    'app'
+    'app',
+    'google_analytics',
 ]
 
 MIDDLEWARE = [
