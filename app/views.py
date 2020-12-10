@@ -52,8 +52,8 @@ def assignMenu(request):
 	current_user = request.user
 	client = Client.objects.get(user=current_user)
 	restaurant_name = request.session['restaurant_name']
-	max_cal_menu = 5000  # client.calories * 4 / 10
-	min_cal_menu = 0  # client.calories * 35 / 100
+	max_cal_menu =  client.calories * 4 / 10
+	min_cal_menu = client.calories * 35 / 100
 	week_menu = WeekMenu.objects.filter(restaurant=restaurant_name, monday_calories__gte=min_cal_menu, monday_calories__lte=max_cal_menu).first()
 	client.week_menu = week_menu
 	client.save()

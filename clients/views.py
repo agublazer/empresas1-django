@@ -84,7 +84,8 @@ def calculateCalories(genero, peso,altura,edad,ejercicio,objetivo):
                 TMBM=TMBM*1.9
                 return (TMBM+500)
 
-        elif genero=="femenino":
+    elif genero=="femenino":
+           
              TMBF= 655+(9.6*peso)+(1.8*altura)-(4.7*edad)
              if objetivo=="bajar":
                 if ejercicio=="poco o nada":
@@ -137,7 +138,7 @@ def calculateCalories(genero, peso,altura,edad,ejercicio,objetivo):
                      TMBF=TMBF*1.9
                      return (TMBF+300)
 
-        print("no se pudo calcular")
+    print("no se pudo calcular")
 
 def logout_view(request):
     logout(request)
